@@ -1,12 +1,18 @@
 {
   "author": "Isaac Z. Schlueter <i@izs.me> (http://blog.izs.me/)",
+	"contributors": [
+		"Lloyd Heberlie <lheberlie@esri.com>",
+	],
   "name": "ini",
   "description": "An ini encoder/decoder for node",
-  "version": "1.3.4",
+  "version": "1.3.4.1",
   "repository": {
     "type": "git",
-    "url": "git://github.com/isaacs/ini.git"
+    "url": "git://github.com/lheberlie/ini/ini.git"
   },
+	"bugs": {
+		"url": "https://github.com/lheberlie/ini/issues"
+	}
   "main": "ini.js",
   "scripts": {
     "pretest": "standard ini.js",
