@@ -1,10 +1,12 @@
 exports.parse = exports.decode = decode
+
 exports.stringify = exports.encode = encode
 
 exports.safe = safe
 exports.unsafe = unsafe
 
-var eol = process.platform === "win32" ? "\r\n" : "\n"
+var eol = typeof process !== 'undefined' &&
+  process.platform === 'win32' ? '\r\n' : '\n'
 
 var commentsDictionary = {},
     commentsRegEx      = /;\s*[-:|;\w\d_\\\/.\s]*/;
@@ -109,8 +111,8 @@ function decode(str){
       }
       return
     }
-    var key   = unsafe(match[2])
-      , value = match[3] ? unsafe((match[4] || "")) : true
+    var key = unsafe(match[2])
+    var value = match[3] ? unsafe(match[4]) : true
     switch (value) {
       case 'true':
       case 'false':
@@ -178,19 +180,19 @@ function isQuoted(val){
     || (val.charAt(0) === "'" && val.slice(-1) === "'")
 }
 
-function safe(val){
-  return ( typeof val !== "string"
-  || val.match(/[=\r\n]/)
-  || val.match(/^\[/)
-  || (val.length > 1
-  && isQuoted(val))
-  || val !== val.trim() )
-    ? JSON.stringify(val)
-    : val.replace(/;/g, '\\;').replace(/#/g, "\\#")
+function safe (val) {
+  return (typeof val !== 'string' ||
+    val.match(/[=\r\n]/) ||
+    val.match(/^\[/) ||
+    (val.length > 1 &&
+     isQuoted(val)) ||
+    val !== val.trim())
+      ? JSON.stringify(val)
+      : val.replace(/;/g, '\\;').replace(/#/g, '\\#')
 }
 
-function unsafe(val, doUnesc){
-  val = (val || "").trim()
+function unsafe (val, doUnesc) {
+  val = (val || '').trim()
   if (isQuoted(val)) {
     // remove the single quotes before calling JSON.parse
     if (val.charAt(0) === "'") {
@@ -210,10 +212,10 @@ function unsafe(val, doUnesc){
       if (esc) {
         if ("\\;#".indexOf(c) !== -1) {
           unesc += c
+        } else {
+          unesc += '\\' + c
         }
-        else {
-          unesc += "\\" + c
-        }
+
         esc = false
       }
       else if (";#".indexOf(c) !== -1) {
@@ -229,7 +231,7 @@ function unsafe(val, doUnesc){
     if (esc) {
       unesc += "\\"
     }
-    return unesc
+    return unesc.trim()
   }
   return val
 }
